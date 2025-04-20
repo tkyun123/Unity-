@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,7 +13,9 @@ public class GameSettingsUI : MonoBehaviour
     public TMP_Dropdown dropdownFirstMove;
     public AudioClip testSoundClip;
     public GameObject settingsPanel;
+    public float fadeDuration = 0.3f;
     void Awake() => Instance = this;
+
     public void SetttingShow()
     {
         LoadSettingsToUI();
@@ -64,4 +67,7 @@ public class GameSettingsUI : MonoBehaviour
         dropdownDifficulty.value = PlayerPrefs.GetInt("Difficulty", 0);
         dropdownFirstMove.value = PlayerPrefs.GetInt("FirstMove", 0);
     }
+
+
+
 }

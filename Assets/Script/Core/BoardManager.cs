@@ -18,7 +18,7 @@ public class BoardManager : MonoBehaviour
 
     public void OperatorChess(int x, int y, string mask)
     {
-        Debug.Log("x:" + x.ToString() + "y:" + y.ToString());
+        //Debug.Log("x:" + x.ToString() + "y:" + y.ToString()+mask);
         if(!grid[x, y].Play(mask))
         {
             Debug.LogError("Can not Play Chess");
@@ -26,8 +26,6 @@ public class BoardManager : MonoBehaviour
     }
     public bool CheckForWin(Cell[,] board,string player)
     {
-        // 检查行列对角线
-        // 如果有胜者，调用 GameManager.Instance.EndGame()
         for(int i = 0; i < 3; i++)
         {
             if (board[i, 0].currentMark == player && board[i, 1].currentMark == player && board[i, 2].currentMark == player)
@@ -75,8 +73,22 @@ public class BoardManager : MonoBehaviour
     {
         foreach (Cell cell in grid)
         {
+            
             cell.Repentance();
+
         }
+    }
+    public void CurrentInfo()
+    {
+        string out_text = "";
+        for(int i = 0;i< 3; i++)
+        {
+            for(int j = 0; j < 3; j++)
+            {
+                out_text += grid[i, j].currentMark + ";";
+            }
+        }
+        Debug.Log(out_text);
     }
 }
 

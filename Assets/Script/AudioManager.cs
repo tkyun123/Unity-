@@ -20,6 +20,13 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void Start()
+    {
+        float sound = PlayerPrefs.GetFloat("SoundVolume", 1f);
+        float music = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        SetBGMVolume(music);
+        SetSFXVolume(sound);
+    }
     // ≤•∑≈±≥æ∞“Ù¿÷
     public void PlayBGM(AudioClip clip, float volume = 1f, bool loop = true)
     {

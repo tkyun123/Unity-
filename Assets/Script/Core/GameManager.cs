@@ -19,11 +19,14 @@ public class GameManager : MonoBehaviour
     public Image aiAvatar;
     public TMP_Text playerText;
     public TMP_Text aiText;
+    public Outline playerOutline;
+    public Outline aiOutline;
     public int playerScore;
     public int AiScore;
     public int difficulty;
     public GameObject gameSettingsUI;
     public GameObject gameEndUI;
+    
     [SerializeField] private string gameSceneName = "StartMenu";
     private Stack<Vector2Int> historyOperation = new Stack<Vector2Int>();
     void Awake() => Instance = this;
@@ -38,7 +41,14 @@ public class GameManager : MonoBehaviour
         currentPlayer = (currentPlayer == Player.X) ? Player.O : Player.X;
         if(!IsPlayerTurn())
         {
-            AIController.Instance.AIAction();
+            aiOutline.effectColor = new Color(255, 0, 0, 255);
+            playerOutline.effectColor = new Color(0, 0, 0, 255);
+            AIController.Instance.Move(0.3f);
+        }
+        else
+        {
+            playerOutline.effectColor = new Color(255, 0, 0, 255);
+            aiOutline.effectColor = new Color(0, 0, 0, 255);
         }
     }
     public void Start()
@@ -57,7 +67,14 @@ public class GameManager : MonoBehaviour
         AiScore = 0;
         if (!IsPlayerTurn())
         {
-            AIController.Instance.AIAction();
+            aiOutline.effectColor = new Color(255, 0, 0, 255);
+            playerOutline.effectColor = new Color(0, 0, 0, 255);
+            AIController.Instance.Move(1f);
+        }
+        else
+        {
+            playerOutline.effectColor = new Color(255, 0, 0, 255);
+            aiOutline.effectColor = new Color(0, 0, 0, 255);
         }
     }
 
@@ -76,11 +93,16 @@ public class GameManager : MonoBehaviour
             gameEndUI.SetActive(true);
             GameEndPanel.Instance.lose();
         }
-        if(winner == player.ToString())
+        else if(winner == player.ToString())
         {
             playerScore++;
             gameEndUI.SetActive(true);
             GameEndPanel.Instance.win();
+        }
+        else
+        {
+            gameEndUI.SetActive(true);
+            GameEndPanel.Instance.draw();
         }
         playerText.text = playerScore.ToString();
         aiText.text = AiScore.ToString();
@@ -90,24 +112,29 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        gameEnded = false;
         currentPlayer = Player.X;
         BoardManager.Instance.ResetBoard();
         int difficulty = PlayerPrefs.GetInt("Difficulty", 0);
         AIController.Instance.difficulty = difficulty;
         int firstMove = PlayerPrefs.GetInt("FirstMove", 0);
-        if(firstMove == 0)
+        historyOperation.Clear();
+        gameEnded = false;
+        if (firstMove == 0)
         {
             currentPlayer = player;
+            playerOutline.effectColor = new Color(255, 0, 0, 255);
+            aiOutline.effectColor = new Color(0, 0, 0, 255);
         }
         else
         {
             currentPlayer = ai;
-
-            AIController.Instance.FirstMove();
+            aiOutline.effectColor = new Color(255, 0, 0, 255);
+            playerOutline.effectColor = new Color(0, 0, 0, 255);
+            AIController.Instance.Move(1f);
         }
         //UIManager.Instance.HideGameOver();
-        historyOperation.Clear();
+       
+ 
     }
 
     public void recordOperation(int x,int y)

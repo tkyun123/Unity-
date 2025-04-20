@@ -27,13 +27,14 @@ public class AIController : MonoBehaviour
         
     }
 
-    public void FirstMove()
+    public void Move(float time)
     {
-        Invoke("AIAction", 1);
+        Invoke("AIAction", time);
     }
 
     public void AIAction()
     {
+
         board = BoardManager.Instance.grid;
         Vector2Int pos = new Vector2Int(0, 0);
         if(difficulty == 1)

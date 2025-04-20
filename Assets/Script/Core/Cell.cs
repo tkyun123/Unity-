@@ -30,7 +30,7 @@ public class Cell : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public bool Play(string mark)
     {
-        currentMark = mark;
+        this.currentMark = mark;
 
         if (currentMark == "X") currentImg.sprite = GameManager.Instance.chessXImg;
         if (currentMark == "O") currentImg.sprite = GameManager.Instance.chessOImg;
@@ -38,15 +38,8 @@ public class Cell : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         StartCoroutine(FadeInChessPiece());
         AudioManager.Instance.PlaySFX(move);
         button.interactable = false;
+        
         GameManager.Instance.recordOperation(this.x, this.y);
-        if (BoardManager.Instance.CheckForWin(currentMark))
-        {
-            GameManager.Instance.EndGame(mark);
-        }
-        else
-        {
-            GameManager.Instance.SwitchTurn();
-        }
 
         return true;
     }
@@ -113,6 +106,14 @@ public class Cell : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         color.a = 1f;
         currentImg.color = color;
+        if (BoardManager.Instance.CheckForWin(currentMark))
+        {
+            GameManager.Instance.EndGame(currentMark);
+        }
+        else
+        {
+            GameManager.Instance.SwitchTurn();
+        }
     }
 
     public void Repentance()
@@ -131,7 +132,7 @@ public class Cell : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
+            float alpha = Mathf.Lerp(color.a, 0f, elapsed / fadeDuration);
             currentImg.color = new Color(color.r, color.g, color.b, alpha);
             yield return new WaitForEndOfFrame();
         }
