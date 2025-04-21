@@ -36,6 +36,7 @@ public class GameEndPanel : MonoBehaviour
     public void OnQuit()
     {
         GameManager.Instance.Quit();
+        AudioManager.Instance.PlayBGM();
     }
 
     public void FadeIn()
