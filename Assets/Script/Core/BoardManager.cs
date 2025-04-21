@@ -24,25 +24,49 @@ public class BoardManager : MonoBehaviour
             Debug.LogError("Can not Play Chess");
         }
     }
-    public bool CheckForWin(Cell[,] board,string player)
+    public bool CheckForWin(Cell[,] board, string player, bool show = false)
     {
         for(int i = 0; i < 3; i++)
         {
             if (board[i, 0].currentMark == player && board[i, 1].currentMark == player && board[i, 2].currentMark == player)
             {
+                if (show)
+                {
+                    board[i, 0].highlight();
+                    board[i, 1].highlight();
+                    board[i, 2].highlight();
+                }
                 return true;
             }
             if (board[0, i].currentMark == player && board[1, i].currentMark == player && board[2, i].currentMark == player)
             {
+                if (show)
+                {
+                    board[0, i].highlight();
+                    board[1, i].highlight();
+                    board[2, i].highlight();
+                }
                 return true;
             }
         }
         if (board[0, 0].currentMark == player && board[1, 1].currentMark == player && board[2,2].currentMark == player)
         {
+            if (show)
+            {
+                board[0, 0].highlight();
+                board[1, 1].highlight();
+                board[2, 2].highlight();
+            }
             return true;
         }
         if (board[2, 0].currentMark == player && board[1, 1].currentMark == player && board[0, 2].currentMark == player)
         {
+            if (show)
+            {
+                board[0, 2].highlight();
+                board[1, 1].highlight();
+                board[2, 0].highlight();
+            }
             return true;
         }
         return false;
@@ -50,7 +74,7 @@ public class BoardManager : MonoBehaviour
 
     public bool CheckForWin(string player)
     {
-        return CheckForWin(grid, player);
+        return CheckForWin(grid, player,true);
     }
 
     public bool BoardFull(Cell[,] board)

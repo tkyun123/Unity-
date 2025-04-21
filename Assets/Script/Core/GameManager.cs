@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour
     public int difficulty;
     public GameObject gameSettingsUI;
     public GameObject gameEndUI;
-    
     [SerializeField] private string gameSceneName = "StartMenu";
     private Stack<Vector2Int> historyOperation = new Stack<Vector2Int>();
     void Awake() => Instance = this;
@@ -38,7 +37,7 @@ public class GameManager : MonoBehaviour
             EndGame("None");
             return;
         }
-        currentPlayer = (currentPlayer == Player.X) ? Player.O : Player.X;
+        Timer.Instance.ResetCountdown();
         if(!IsPlayerTurn())
         {
             aiOutline.effectColor = new Color(255, 0, 0, 255);
@@ -50,6 +49,11 @@ public class GameManager : MonoBehaviour
             playerOutline.effectColor = new Color(255, 0, 0, 255);
             aiOutline.effectColor = new Color(0, 0, 0, 255);
         }
+    }
+
+    public void updateCurrentPlayer()
+    {
+        currentPlayer = (currentPlayer == Player.X) ? Player.O : Player.X;
     }
     public void Start()
     {
@@ -65,6 +69,7 @@ public class GameManager : MonoBehaviour
         }
         playerScore = 0;
         AiScore = 0;
+        Timer.Instance.ResetCountdown();
         if (!IsPlayerTurn())
         {
             aiOutline.effectColor = new Color(255, 0, 0, 255);
@@ -83,26 +88,30 @@ public class GameManager : MonoBehaviour
         return currentPlayer == player;
     }
 
-    public void EndGame(string winner)
+    public void EndGame(string winner,string reason="")
     {
         gameEnded = true;
-        //UIManager.Instance.ShowGameOver(winner);
+        Timer.Instance.StopCountdown();
+        AudioManager.Instance.PauseMusic();
         if(winner == ai.ToString())
         {
             AiScore++;
             gameEndUI.SetActive(true);
-            GameEndPanel.Instance.lose();
+            GameEndPanel.Instance.lose(reason);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.lose);
         }
         else if(winner == player.ToString())
         {
             playerScore++;
             gameEndUI.SetActive(true);
-            GameEndPanel.Instance.win();
+            GameEndPanel.Instance.win(reason);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.win);
         }
         else
         {
             gameEndUI.SetActive(true);
-            GameEndPanel.Instance.draw();
+            GameEndPanel.Instance.draw("\nBOARD FULL");
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.draw);
         }
         playerText.text = playerScore.ToString();
         aiText.text = AiScore.ToString();
@@ -119,6 +128,8 @@ public class GameManager : MonoBehaviour
         int firstMove = PlayerPrefs.GetInt("FirstMove", 0);
         historyOperation.Clear();
         gameEnded = false;
+        Timer.Instance.ResetCountdown();
+        AudioManager.Instance.PlayBGM();
         if (firstMove == 0)
         {
             currentPlayer = player;
@@ -132,11 +143,15 @@ public class GameManager : MonoBehaviour
             playerOutline.effectColor = new Color(0, 0, 0, 255);
             AIController.Instance.Move(1f);
         }
-        //UIManager.Instance.HideGameOver();
-       
- 
     }
 
+    public void Timeout()
+    {
+        if(currentPlayer == player)
+        {
+            this.EndGame(ai.ToString(),"\nTIME OUT");
+        }
+    }
     public void recordOperation(int x,int y)
     {
         this.historyOperation.Push(new Vector2Int(x, y));
@@ -157,6 +172,7 @@ public class GameManager : MonoBehaviour
     public void Options()
     {
         gameSettingsUI.SetActive(true);
+        Timer.Instance.Pause();
         GameSettingsUI.Instance.SetttingShow();
     }
 

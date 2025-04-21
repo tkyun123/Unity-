@@ -57,6 +57,7 @@ public class GameSettingsUI : MonoBehaviour
         AudioManager.Instance.SetSFXVolume(sound);
         AudioManager.Instance.SetBGMVolume(music);
         settingsPanel.SetActive(false);
+        Timer.Instance.Continue();
     }
     void LoadSettingsToUI()
     {

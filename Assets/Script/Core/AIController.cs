@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 
 public class AIController : MonoBehaviour
 {
-    // Start is called before the first frame update
     public static AIController Instance;
     public string mark;
     public string playerMark;
@@ -19,12 +18,6 @@ public class AIController : MonoBehaviour
     {
         mark = GameManager.Instance.ai.ToString();
         playerMark = GameManager.Instance.player.ToString();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void Move(float time)
@@ -51,7 +44,7 @@ public class AIController : MonoBehaviour
     {
         int randomInt = Random.Range(0, 8);
         int i = 0;
-        Cell target = new Cell();
+        Vector2Int pos = new Vector2Int(-1, -1);
         while (i <= randomInt)
         {
             foreach(Cell cell in board)
@@ -59,12 +52,13 @@ public class AIController : MonoBehaviour
                 if (cell.Empty())
                 {
                     i++;
-                    target = cell;
+                    pos.x = cell.x;
+                    pos.y = cell.y;
                 }
                 if (i > randomInt) break;
             }
         }
-        return new Vector2Int(target.x, target.y);
+        return pos;
     }
     public Vector2Int FindBestMove(Cell[,] board)
     {
@@ -95,7 +89,7 @@ public class AIController : MonoBehaviour
     public int Minimax(Cell[,] board, int depth, bool isMaximizing, int alpha = int.MinValue, int beta = int.MaxValue)
     {
         // 终局状态判断
-        if (BoardManager.Instance.CheckForWin(board, mark)) return 20 - depth;  // 胜利值随深度衰减[7]
+        if (BoardManager.Instance.CheckForWin(board, mark)) return 20 - depth;  // 胜利值随深度衰减
         if (BoardManager.Instance.CheckForWin(board, playerMark)) return -20 + depth;
         if (BoardManager.Instance.BoardFull(board)) return 0;
 

@@ -7,6 +7,9 @@ public class AudioManager : MonoBehaviour
     public AudioSource bgmSource;    // ±≥æ∞“Ù¿÷
     public AudioSource sfxSource;    // “Ù–ß
     public AudioClip move;
+    public AudioClip win;
+    public AudioClip lose;
+    public AudioClip draw;
     void Awake()
     {
         if (Instance == null)
@@ -28,11 +31,9 @@ public class AudioManager : MonoBehaviour
         SetSFXVolume(sound);
     }
     // ≤•∑≈±≥æ∞“Ù¿÷
-    public void PlayBGM(AudioClip clip, float volume = 1f, bool loop = true)
+    public void PlayBGM()
     {
-        bgmSource.clip = clip;
-        bgmSource.volume = volume;
-        bgmSource.loop = loop;
+        bgmSource.loop = true;
         bgmSource.Play();
     }
 
@@ -59,6 +60,12 @@ public class AudioManager : MonoBehaviour
     {
         bgmSource.mute = mute;
         sfxSource.mute = mute;
+    }
+
+    // ‘›Õ£“Ù¿÷
+    public void PauseMusic()
+    {
+        bgmSource.Pause();
     }
 
 }

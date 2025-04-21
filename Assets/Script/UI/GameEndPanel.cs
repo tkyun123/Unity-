@@ -11,28 +11,27 @@ public class GameEndPanel : MonoBehaviour
     public CanvasGroup canvasGroup;
     void Awake() => Instance = this;
 
-    public void win()
+    public void win(string reason="")
     {
-        EndText.text = "YOU WIN";
+        EndText.text = "YOU WIN" + reason;
         FadeIn();
     }
 
-    public void lose()
+    public void lose(string reason = "")
     {
-        EndText.text = "YOU LOSE";
+        EndText.text = "YOU LOSE" + reason;
         FadeIn();
     }
 
-    public void draw()
+    public void draw(string reason = "")
     {
-        EndText.text = "DRAW";
+        EndText.text = "DRAW" + reason;
         FadeIn();
     }
     public void Continue()
     {
         GameManager.Instance.RestartGame();
         gameObject.SetActive(false);
-        //GameManager.Instance.RestartGame();
     }
     public void OnQuit()
     {
@@ -47,10 +46,10 @@ public class GameEndPanel : MonoBehaviour
     IEnumerator FadePanel(float startAlpha, float targetAlpha)
     {
         canvasGroup = GetComponent<CanvasGroup>();
-        float elapsedTime = 0;
+        float elapsedTime = -0.5f;
         while (elapsedTime < fadeDuration)
         {
-            canvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / fadeDuration);
+            canvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, (elapsedTime > 0 ? elapsedTime : 0)/ fadeDuration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }

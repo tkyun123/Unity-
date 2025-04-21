@@ -9,13 +9,13 @@ public class Cell : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public int x, y;
     public Button button;
     public Image currentImg;
+    public Image backgroundImg;
     public string currentMark = "";
     private float fadeDuration = 0.5f;
     public AudioClip move;
     void Start()
     {
         BoardManager.Instance.RegisterCell(x, y, this);
-        currentImg = GetComponent<Image>();
         button = GetComponent<Button>();
         button.onClick.AddListener(OnClick);
         currentMark = "";
@@ -40,7 +40,7 @@ public class Cell : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         button.interactable = false;
         
         GameManager.Instance.recordOperation(this.x, this.y);
-
+        GameManager.Instance.updateCurrentPlayer();
         return true;
     }
 
@@ -67,6 +67,7 @@ public class Cell : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Color color = currentImg.color;
         color.a = 0f;
         currentImg.color = color;
+        backgroundImg.color = Color.clear;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -86,6 +87,10 @@ public class Cell : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             this.currentImg.color = new Color(1f, 1f, 1f, 0f);
         }    
+    }
+    public void highlight()
+    {
+        backgroundImg.color = Color.green;
     }
 
     private IEnumerator FadeInChessPiece()
